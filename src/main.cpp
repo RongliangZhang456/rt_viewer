@@ -152,6 +152,7 @@ void showGui(Context &ctx)
     if (ImGui::Button("Reset")) { rt::resetImage(ctx.rtx); }
 }
 
+// Display function, called once per frame
 void display(Context &ctx)
 {
     glClearColor(0.0, 0.0, 0.0, 0.0);

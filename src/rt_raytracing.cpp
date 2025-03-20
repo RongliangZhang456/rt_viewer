@@ -84,6 +84,7 @@ glm::vec3 color(RTContext &rtx, const Ray &r, int max_bounces)
 }
 
 // MODIFY THIS FUNCTION!
+// Called when initializing the program.
 void setupScene(RTContext &rtx, const char *filename)
 {
     g_scene.ground = Sphere(glm::vec3(0.0f, -1000.5f, 0.0f), 1000.0f);
@@ -146,6 +147,7 @@ void updateLine(RTContext &rtx, int y)
         }
         glm::vec3 c = color(rtx, r, rtx.max_bounces);
         rtx.image[y * nx + x] += glm::vec4(c, 1.0f);
+		// TODO: need to look into this
     }
 }
 
