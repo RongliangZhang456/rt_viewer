@@ -112,6 +112,7 @@ void updateRayTracing(Context &ctx)
         rt::updateImage(ctx.rtx);
         if (glfwGetTime() - tic > (1.0f / 60.0f)) { break; }
     }
+
 }
 
 void drawImage(Context &ctx)
