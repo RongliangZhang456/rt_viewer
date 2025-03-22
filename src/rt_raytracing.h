@@ -23,6 +23,7 @@ struct RTContext {
     glm::vec3 sky_color = glm::vec3(0.5f, 0.7f, 1.0f);
     bool show_normals = true;
     bool enable_antialiasing = true;
+    bool enable_Lambertian_Reflection = false;
     // Add more settings and parameters here
     // ...
 };

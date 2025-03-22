@@ -96,13 +96,19 @@ namespace rt {
         if (max_bounces < 0) return glm::vec3(0.0f);
 
         HitRecord rec;
-        if (hit_world(r, 0.0f, 9999.0f, rec)) {
+        if (hit_world(r, 0.0001f, 9999.0f, rec)) {
             rec.normal = glm::normalize(rec.normal);  // Always normalise before use!
             if (rtx.show_normals) { return rec.normal * 0.5f + 0.5f; }
 
             // Implement lighting for materials here
             // ...
-            glm::vec3 direction = random_on_hemisphere(rec.normal);
+            glm::vec3 direction;
+            if (rtx.enable_Lambertian_Reflection) {
+                direction = rec.normal + random_unit_vector();
+            }
+            else {
+                direction = random_on_hemisphere(rec.normal);
+            }
             Ray scattered(rec.p, direction);
             return 0.5f * color(rtx, scattered, max_bounces - 1);
         }
