@@ -133,6 +133,7 @@ void drawImage(Context &ctx)
 }
 
 // MODIFY THIS FUNCTION
+// Set up the GUI window
 void showGui(Context &ctx)
 {
     if (ImGui::SliderInt("Max bounces", &ctx.rtx.max_bounces, 0, 10)) {
@@ -143,6 +144,7 @@ void showGui(Context &ctx)
         rt::resetAccumulation(ctx.rtx);
     }
     if (ImGui::Checkbox("Show normals", &ctx.rtx.show_normals)) { rt::resetAccumulation(ctx.rtx); }
+    if (ImGui::Checkbox("Enable antialiasing", &ctx.rtx.enable_antialiasing)) { rt::resetAccumulation(ctx.rtx); }
     // Add more settings and parameters here
     // ...
 
