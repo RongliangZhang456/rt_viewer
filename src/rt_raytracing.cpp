@@ -20,6 +20,26 @@ namespace rt {
         Box mesh_bbox;
     } g_scene;
 
+    inline double random_double() {
+        static std::uniform_real_distribution<double> distribution(0.0, 1.0);
+        static std::mt19937 generator;
+        return distribution(generator);
+    }
+
+    inline double random_double(double min, double max) {
+        // Returns a random real in [min,max).
+        return min + (max - min) * random_double();
+    }
+
+    inline glm::vec3 random_unit_vector() {
+        while (true) {
+            auto p = glm::vec3(random_double(-1, 1), random_double(-1, 1), random_double(-1, 1));
+            auto lensq = glm::dot(p, p);
+            if (1e-160 < lensq && lensq <= 1)
+                return p / sqrt(lensq);
+        }
+    }
+
     bool hit_world(const Ray& r, float t_min, float t_max, HitRecord& rec)
     {
         HitRecord temp_rec;
@@ -55,6 +75,13 @@ namespace rt {
         return hit_anything;
     }
 
+    inline glm::vec3 random_on_hemisphere(const glm::vec3& normal) {
+        glm::vec3 on_unit_sphere = random_unit_vector();
+        if (glm::dot(on_unit_sphere, normal) > 0.0) // In the same hemisphere as the normal
+            return on_unit_sphere;
+        else
+            return -on_unit_sphere;
+    }
     // This function should be called recursively (inside the function) for
     // bouncing rays when you compute the lighting for materials, like this
     //
@@ -75,7 +102,9 @@ namespace rt {
 
             // Implement lighting for materials here
             // ...
-            return glm::vec3(0.0f);
+            glm::vec3 direction = random_on_hemisphere(rec.normal);
+            Ray scattered(rec.p, direction);
+            return 0.5f * color(rtx, scattered, max_bounces - 1);
         }
 
         // If no hit, return sky color
@@ -83,6 +112,7 @@ namespace rt {
         float t = 0.5f * (unit_direction.y + 1.0f);
         return (1.0f - t) * rtx.ground_color + t * rtx.sky_color;
     }
+
 
     // MODIFY THIS FUNCTION!
     // Called when initializing the program.
@@ -114,13 +144,6 @@ namespace rt {
         //}
     }
 
-    inline double random_double() {
-        static std::uniform_real_distribution<double> distribution(0.0, 1.0);
-        static std::mt19937 generator;
-        return distribution(generator);
-    }
-
-    // MODIFY THIS FUNCTION!
     void updateLine(RTContext& rtx, int y)
     {
         int nx = rtx.width;
