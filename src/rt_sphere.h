@@ -8,13 +8,16 @@ class Sphere : public Hitable {
   public:
     Sphere() {}
     Sphere(const glm::vec3 &cen, float r, std::shared_ptr<Material> m) : center(cen), radius(r), mat(m){
-
+        auto rvec = glm::vec3(radius, radius, radius);
+        bbox = AABB(cen - rvec, cen + rvec);
     };
     virtual bool hit(const Ray &r, float t_min, float t_max, HitRecord &rec) const;
+    AABB bounding_box() const override { return bbox; }
 
     glm::vec3 center;
     float radius;
 	std::shared_ptr<Material> mat;
+    AABB bbox;
 };
 
 // Ray-sphere test from "Ray Tracing in a Weekend" book (page 16)

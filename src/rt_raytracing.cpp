@@ -19,7 +19,6 @@ namespace rt {
         std::vector<Sphere> spheres;
         std::vector<Box> boxes;
         std::vector<Triangle> mesh;
-        Box mesh_bbox;
     } g_scene;
 
     inline double random_double() {

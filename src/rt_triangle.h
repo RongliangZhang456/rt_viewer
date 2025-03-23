@@ -7,13 +7,18 @@ namespace rt {
 class Triangle : public Hitable {
   public:
     Triangle() {}
-    Triangle(const glm::vec3 &a, const glm::vec3 &b, const glm::vec3 &c, std::shared_ptr<Material> m) : v0(a), v1(b), v2(c), mat(m){};
+    Triangle(const glm::vec3 &a, const glm::vec3 &b, const glm::vec3 &c, std::shared_ptr<Material> m) : v0(a), v1(b), v2(c), mat(m)
+    {
+        //TODO: initialize bbox.
+    };
     virtual bool hit(const Ray &r, float t_min, float t_max, HitRecord &rec) const;
+    AABB bounding_box() const override { return bbox; }
 
     glm::vec3 v0;
     glm::vec3 v1;
     glm::vec3 v2;
     std::shared_ptr<Material> mat;
+    AABB bbox;
 };
 
 // Ray-triangle test adapted from "Real-Time Collision Detection" book (pages 191--192)
