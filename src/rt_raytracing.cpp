@@ -96,7 +96,7 @@ namespace rt {
         if (max_bounces < 0) return glm::vec3(0.0f);
 
         HitRecord rec;
-        if (hit_world(r, 0.0001f, 9999.0f, rec)) {
+        if (hit_world(r, 0.001f, 9999.0f, rec)) {
             rec.normal = glm::normalize(rec.normal);  // Always normalise before use!
             if (rtx.show_normals) { return rec.normal * 0.5f + 0.5f; }
 
