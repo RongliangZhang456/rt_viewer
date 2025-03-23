@@ -8,7 +8,6 @@ class Sphere : public Hitable {
   public:
     Sphere() {}
     Sphere(const glm::vec3 &cen, float r, std::shared_ptr<Material> m) : center(cen), radius(r), mat(m){
-        // TODO: Initialize the material pointer `mat`.
 
     };
     virtual bool hit(const Ray &r, float t_min, float t_max, HitRecord &rec) const;

@@ -156,18 +156,18 @@ namespace rt {
         //    Box(glm::vec3(-1.0f, -0.25f, 0.0f), glm::vec3(0.25f)),
         //};
 
-        //cg::OBJMesh mesh;
-        //cg::objMeshLoad(mesh, filename);
-        //g_scene.mesh.clear();
-        //for (int i = 0; i < mesh.indices.size(); i += 3) {
-        //    int i0 = mesh.indices[i + 0];
-        //    int i1 = mesh.indices[i + 1];
-        //    int i2 = mesh.indices[i + 2];
-        //    glm::vec3 v0 = mesh.vertices[i0] + glm::vec3(0.0f, 0.135f, 0.0f);
-        //    glm::vec3 v1 = mesh.vertices[i1] + glm::vec3(0.0f, 0.135f, 0.0f);
-        //    glm::vec3 v2 = mesh.vertices[i2] + glm::vec3(0.0f, 0.135f, 0.0f);
-        //    g_scene.mesh.push_back(Triangle(v0, v1, v2));
-        //}
+        cg::OBJMesh mesh;
+        cg::objMeshLoad(mesh, filename);
+        g_scene.mesh.clear();
+        for (int i = 0; i < mesh.indices.size(); i += 3) {
+            int i0 = mesh.indices[i + 0];
+            int i1 = mesh.indices[i + 1];
+            int i2 = mesh.indices[i + 2];
+            glm::vec3 v0 = mesh.vertices[i0] + glm::vec3(0.0f, 0.135f, 0.0f);
+            glm::vec3 v1 = mesh.vertices[i1] + glm::vec3(0.0f, 0.135f, 0.0f);
+            glm::vec3 v2 = mesh.vertices[i2] + glm::vec3(0.0f, 0.135f, 0.0f);
+            g_scene.mesh.push_back(Triangle(v0, v1, v2, metal));
+        }
     }
 
 
