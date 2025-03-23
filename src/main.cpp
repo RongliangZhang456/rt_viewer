@@ -33,6 +33,7 @@ struct Context {
     rt::RTContext rtx;
     GLuint texture = 0;
     float elapsed_time;
+	bool gama_correction = false;
 };
 
 // Returns the value of an environment variable
@@ -126,6 +127,7 @@ void drawImage(Context &ctx)
     // Activate program and pass uniform for texture unit
     glUseProgram(ctx.program);
     glUniform1i(glGetUniformLocation(ctx.program, "u_texture"), 0);
+    glUniform1i(glGetUniformLocation(ctx.program, "u_gama_correction"), ctx.gama_correction);
 
     // Draw fullscreen quad (without any vertex buffers)
     glBindVertexArray(ctx.emptyVAO);
@@ -147,6 +149,7 @@ void showGui(Context &ctx)
     if (ImGui::Checkbox("Enable antialiasing", &ctx.rtx.enable_antialiasing)) { rt::resetAccumulation(ctx.rtx); }
     if (ImGui::Checkbox("Enable Enable_Lambertian_Reflection", &ctx.rtx.enable_Lambertian_Reflection)) { rt::resetAccumulation(ctx.rtx); }
     if (ImGui::Checkbox("Enable Material", &ctx.rtx.enable_Material)) { rt::resetAccumulation(ctx.rtx); }
+	if (ImGui::Checkbox("Gama correction", &ctx.gama_correction)) { rt::resetAccumulation(ctx.rtx); }
     // Add more settings and parameters here
     // ...
 
