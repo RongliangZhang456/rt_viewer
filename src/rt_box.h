@@ -10,8 +10,11 @@ class Box : public Hitable {
     Box(const glm::vec3 &cen, const glm::vec3 r) : center(cen), radius(r){};
     virtual bool hit(const Ray &r, float t_min, float t_max, HitRecord &rec) const;
 
+    AABB bounding_box() const override { return bbox; }
+
     glm::vec3 center;
     glm::vec3 radius;
+    AABB bbox;
 };
 
 // Ray-box test adapted from branchless code at

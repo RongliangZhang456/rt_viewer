@@ -25,7 +25,7 @@ namespace rt {
             bbox = AABB(bbox, object->bounding_box());
         }
 
-        bool hit(const Ray &r, double ray_tmin, double ray_tmax, HitRecord &rec) const override {
+        bool hit(const Ray &r, float ray_tmin, float ray_tmax, HitRecord &rec) const override {
             HitRecord temp_rec;
             bool hit_anything = false;
             auto closest_so_far = ray_tmax;

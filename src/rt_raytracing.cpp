@@ -5,6 +5,8 @@
 #include "rt_triangle.h"
 #include "rt_box.h"
 #include "rt_material.h"
+#include "rt_hitable_list.h"
+#include "rt_bvh_h.h"
 #include <memory>
 
 #include <random>
@@ -19,6 +21,7 @@ namespace rt {
         std::vector<Sphere> spheres;
         std::vector<Box> boxes;
         std::vector<Triangle> mesh;
+        Hittable_list world;
     } g_scene;
 
     inline double random_double() {
@@ -30,6 +33,11 @@ namespace rt {
     inline double random_double(double min, double max) {
         // Returns a random real in [min,max).
         return min + (max - min) * random_double();
+    }
+
+    inline int random_int(int min, int max) {
+        // Returns a random integer in [min,max].
+        return int(random_double(min, max + 1));
     }
 
     inline glm::vec3 random_unit_vector() {
@@ -47,32 +55,25 @@ namespace rt {
         bool hit_anything = false;
         float closest_so_far = t_max;
 
-        if (g_scene.ground.hit(r, t_min, closest_so_far, temp_rec)) {
-            hit_anything = true;
-            closest_so_far = temp_rec.t;
-            rec = temp_rec;
-        }
+        g_scene.world.add(std::make_shared<Sphere>(g_scene.ground));
         for (int i = 0; i < g_scene.spheres.size(); ++i) {
-            if (g_scene.spheres[i].hit(r, t_min, closest_so_far, temp_rec)) {
-                hit_anything = true;
-                closest_so_far = temp_rec.t;
-                rec = temp_rec;
-            }
+			g_scene.world.add(std::make_shared<Sphere>(g_scene.spheres[i]));
         }
         for (int i = 0; i < g_scene.boxes.size(); ++i) {
-            if (g_scene.boxes[i].hit(r, t_min, closest_so_far, temp_rec)) {
-                hit_anything = true;
-                closest_so_far = temp_rec.t;
-                rec = temp_rec;
-            }
+			g_scene.world.add(std::make_shared<Box>(g_scene.boxes[i]));
         }
         for (int i = 0; i < g_scene.mesh.size(); ++i) {
-            if (g_scene.mesh[i].hit(r, t_min, closest_so_far, temp_rec)) {
-                hit_anything = true;
-                closest_so_far = temp_rec.t;
-                rec = temp_rec;
-            }
+			g_scene.world.add(std::make_shared<Triangle>(g_scene.mesh[i]));
         }
+
+        g_scene.world = Hittable_list(make_shared<Bvh_node>(g_scene.world));
+        hit_anything = g_scene.world.hit(r, t_min, closest_so_far, temp_rec);
+        // if (g_scene.mesh[i].hit(r, t_min, closest_so_far, temp_rec)) {
+        //     hit_anything = true;
+        //     closest_so_far = temp_rec.t;
+        //     rec = temp_rec;
+        // }
+
         return hit_anything;
     }
 

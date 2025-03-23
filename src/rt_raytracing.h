@@ -35,4 +35,5 @@ void resetImage(RTContext &rtx);
 void resetAccumulation(RTContext &rtx);
 inline glm::vec3 reflect(const glm::vec3& v, const glm::vec3& n);
 inline glm::vec3 random_unit_vector();
+inline int random_int(int min, int max);
 }  // namespace rt
