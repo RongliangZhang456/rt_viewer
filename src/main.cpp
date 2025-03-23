@@ -146,6 +146,7 @@ void showGui(Context &ctx)
     if (ImGui::Checkbox("Show normals", &ctx.rtx.show_normals)) { rt::resetAccumulation(ctx.rtx); }
     if (ImGui::Checkbox("Enable antialiasing", &ctx.rtx.enable_antialiasing)) { rt::resetAccumulation(ctx.rtx); }
     if (ImGui::Checkbox("Enable Enable_Lambertian_Reflection", &ctx.rtx.enable_Lambertian_Reflection)) { rt::resetAccumulation(ctx.rtx); }
+    if (ImGui::Checkbox("Enable Material", &ctx.rtx.enable_Material)) { rt::resetAccumulation(ctx.rtx); }
     // Add more settings and parameters here
     // ...
 

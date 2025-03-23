@@ -7,11 +7,15 @@ namespace rt {
 class Sphere : public Hitable {
   public:
     Sphere() {}
-    Sphere(const glm::vec3 &cen, float r) : center(cen), radius(r){};
+    Sphere(const glm::vec3 &cen, float r, std::shared_ptr<Material> m) : center(cen), radius(r), mat(m){
+        // TODO: Initialize the material pointer `mat`.
+
+    };
     virtual bool hit(const Ray &r, float t_min, float t_max, HitRecord &rec) const;
 
     glm::vec3 center;
     float radius;
+	std::shared_ptr<Material> mat;
 };
 
 // Ray-sphere test from "Ray Tracing in a Weekend" book (page 16)
@@ -30,6 +34,7 @@ bool Sphere::hit(const Ray &r, float t_min, float t_max, HitRecord &rec) const
             rec.t = temp;
             rec.p = r.point_at_parameter(rec.t);
             rec.normal = (rec.p - center) / radius;
+            rec.mat = mat;
             return true;
         }
     }

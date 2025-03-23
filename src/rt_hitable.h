@@ -1,19 +1,20 @@
 #pragma once
 
 #define GLM_FORCE_RADIANS
+
+#include <memory>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/component_wise.hpp>
-#include <memory>
 using std::shared_ptr;
 namespace rt {
 
-class material;
+class Material;
 struct HitRecord {
     float t;
     glm::vec3 p;
     glm::vec3 normal;
-    shared_ptr<material> mat;
+    shared_ptr<Material> mat;
 
     bool front_face;
 

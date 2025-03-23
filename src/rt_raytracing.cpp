@@ -4,6 +4,8 @@
 #include "rt_sphere.h"
 #include "rt_triangle.h"
 #include "rt_box.h"
+#include "rt_material.h"
+#include <memory>
 
 #include <random>
 #include "cg_utils2.h"  // Used for OBJ-mesh loading
@@ -75,6 +77,10 @@ namespace rt {
         return hit_anything;
     }
 
+    inline glm::vec3 reflect(const glm::vec3 &v, const glm::vec3 &n) {
+        return v - 2 * glm::dot(v, n) * n;
+    }
+
     inline glm::vec3 random_on_hemisphere(const glm::vec3& normal) {
         glm::vec3 on_unit_sphere = random_unit_vector();
         if (glm::dot(on_unit_sphere, normal) > 0.0) // In the same hemisphere as the normal
@@ -103,14 +109,25 @@ namespace rt {
             // Implement lighting for materials here
             // ...
             glm::vec3 direction;
-            if (rtx.enable_Lambertian_Reflection) {
-                direction = rec.normal + random_unit_vector();
+            if (rtx.enable_Material) {
+                Ray scattered;
+                glm::vec3 attenuation;
+                if (rec.mat->scatter(r, rec, attenuation, scattered))
+                    return attenuation * color(rtx, scattered, max_bounces - 1);
+                return glm::vec3(0, 0, 0);
             }
-            else {
-                direction = random_on_hemisphere(rec.normal);
+            else 
+            {
+                if (rtx.enable_Lambertian_Reflection) {
+                    direction = rec.normal + random_unit_vector();
+                }
+                else {
+                    direction = random_on_hemisphere(rec.normal);
+                }
+                Ray scattered(rec.p, direction);
+                return 0.5f * color(rtx, scattered, max_bounces - 1);
             }
-            Ray scattered(rec.p, direction);
-            return 0.5f * color(rtx, scattered, max_bounces - 1);
+            
         }
 
         // If no hit, return sky color
@@ -122,13 +139,16 @@ namespace rt {
 
     // MODIFY THIS FUNCTION!
     // Called when initializing the program.
+
     void setupScene(RTContext& rtx, const char* filename)
     {
-        g_scene.ground = Sphere(glm::vec3(0.0f, -1000.5f, 0.0f), 1000.0f);
+        auto metal = std::make_shared<Metal>(glm::vec3(0.7f, 0.6f, 0.5f));
+        auto lambertian = std::make_shared<Lambertian>(glm::vec3(0.3f, 0.6f, 0.5f));
+        g_scene.ground = Sphere(glm::vec3(0.0f, -1000.5f, 0.0f), 1000.0f, lambertian);
         g_scene.spheres = {
-            Sphere(glm::vec3(0.0f, 0.0f, 0.0f), 0.5f),
-            Sphere(glm::vec3(1.0f, 0.0f, 0.0f), 0.5f),
-            Sphere(glm::vec3(-1.0f, 0.0f, 0.0f), 0.5f),
+            Sphere(glm::vec3(0.0f, 0.0f, 0.0f), 0.5f, metal),
+            Sphere(glm::vec3(1.0f, 0.0f, 0.0f), 0.5f, lambertian),
+            Sphere(glm::vec3(-1.0f, 0.0f, 0.0f), 0.5f, metal),
         };
         //g_scene.boxes = {
         //    Box(glm::vec3(0.0f, -0.25f, 0.0f), glm::vec3(0.25f)),
@@ -149,6 +169,7 @@ namespace rt {
         //    g_scene.mesh.push_back(Triangle(v0, v1, v2));
         //}
     }
+
 
     // MODIFY THIS FUNCTION!
     void updateLine(RTContext& rtx, int y)

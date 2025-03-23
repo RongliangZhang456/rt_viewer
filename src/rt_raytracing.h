@@ -24,6 +24,7 @@ struct RTContext {
     bool show_normals = true;
     bool enable_antialiasing = true;
     bool enable_Lambertian_Reflection = false;
+	bool enable_Material = false;
     // Add more settings and parameters here
     // ...
 };
@@ -32,5 +33,6 @@ void setupScene(RTContext &rtx, const char *mesh_filename);
 void updateImage(RTContext &rtx);
 void resetImage(RTContext &rtx);
 void resetAccumulation(RTContext &rtx);
-
+inline glm::vec3 reflect(const glm::vec3& v, const glm::vec3& n);
+inline glm::vec3 random_unit_vector();
 }  // namespace rt
