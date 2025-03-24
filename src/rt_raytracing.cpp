@@ -55,19 +55,9 @@ namespace rt {
         bool hit_anything = false;
         float closest_so_far = t_max;
 
-        g_scene.world.add(std::make_shared<Sphere>(g_scene.ground));
-        for (int i = 0; i < g_scene.spheres.size(); ++i) {
-			g_scene.world.add(std::make_shared<Sphere>(g_scene.spheres[i]));
-        }
-        for (int i = 0; i < g_scene.boxes.size(); ++i) {
-			g_scene.world.add(std::make_shared<Box>(g_scene.boxes[i]));
-        }
-        for (int i = 0; i < g_scene.mesh.size(); ++i) {
-			g_scene.world.add(std::make_shared<Triangle>(g_scene.mesh[i]));
-        }
-
-        g_scene.world = Hittable_list(make_shared<Bvh_node>(g_scene.world));
+        
         hit_anything = g_scene.world.hit(r, t_min, closest_so_far, temp_rec);
+        rec = temp_rec;
         // if (g_scene.mesh[i].hit(r, t_min, closest_so_far, temp_rec)) {
         //     hit_anything = true;
         //     closest_so_far = temp_rec.t;
@@ -168,8 +158,19 @@ namespace rt {
             glm::vec3 v2 = mesh.vertices[i2] + glm::vec3(0.0f, 0.135f, 0.0f);
             g_scene.mesh.push_back(Triangle(v0, v1, v2, metal));
         }
-    }
 
+        g_scene.world.add(std::make_shared<Sphere>(g_scene.ground));
+        for (int i = 0; i < g_scene.spheres.size(); ++i) {
+            g_scene.world.add(std::make_shared<Sphere>(g_scene.spheres[i]));
+        }
+        for (int i = 0; i < g_scene.boxes.size(); ++i) {
+            g_scene.world.add(std::make_shared<Box>(g_scene.boxes[i]));
+        }
+        for (int i = 0; i < g_scene.mesh.size(); ++i) {
+            g_scene.world.add(std::make_shared<Triangle>(g_scene.mesh[i]));
+        }
+        g_scene.world = Hittable_list(std::make_shared<Bvh_node>(g_scene.world));
+    }
 
     // MODIFY THIS FUNCTION!
     void updateLine(RTContext& rtx, int y)
